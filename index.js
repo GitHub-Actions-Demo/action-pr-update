@@ -4,6 +4,7 @@ import * as github from '@actions/github';
 async function run() {
   try {
     const token = core.getInput('token');
+    const label = core.getInput('label');
     const repoOwner = github.context.repo.owner;
     const repo = github.context.repo.repo;
     const octokit = github.getOctokit(token)
@@ -13,7 +14,15 @@ async function run() {
       state: 'open',
       sort: 'long-running',
     })
-    core.setOutput('open-pr-list', pullRequest);
+    const promises = pullRequest.map(async (pr) => {
+      return octokit.rest.issues.addLabels({
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        issue_number: pr.number,
+        labels: [label]
+      });
+    })
+    await Promise.all(promises);
   } catch (error) {
     core.setFailed(error.message);
   }
