@@ -16,8 +16,8 @@ async function run() {
     })
     const promises = pullRequest.map(async (pr) => {
       return octokit.rest.issues.addLabels({
-        owner: context.repo.owner,
-        repo: context.repo.repo,
+        owner: repoOwner,
+        repo: repo,
         issue_number: pr.number,
         labels: [label]
       });
