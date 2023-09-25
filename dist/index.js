@@ -9860,9 +9860,9 @@ __nccwpck_require__.r(__webpack_exports__);
 async function run() {
   try {
     const token = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('token');
-    const repoOwner = _actions_github__WEBPACK_IMPORTED_MODULE_1__.github.context.repo.owner;
-    const repo = _actions_github__WEBPACK_IMPORTED_MODULE_1__.github.context.repo.repo;
-    const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_1__.github.getOctokit(token)
+    const repoOwner = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner;
+    const repo = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo;
+    const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit(token)
     const { data: pullRequest } = await octokit.rest.pulls.list({
       owner: repoOwner,
       repo: repo,
