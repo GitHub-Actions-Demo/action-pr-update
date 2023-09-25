@@ -1,0 +1,12 @@
+name: 'PR Update'
+description: 'Update all PRs when main is pushed'
+inputs:
+  token:  # id of input
+    description: GitHub token for repo/PR access
+    required: true
+outputs:
+  open-pr-list: # id of output
+    description: List of open PRs
+runs:
+  using: 'node20'
+  main: 'dist/index.js'
