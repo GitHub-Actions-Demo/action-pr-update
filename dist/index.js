@@ -9860,6 +9860,7 @@ __nccwpck_require__.r(__webpack_exports__);
 async function run() {
   try {
     const token = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('token');
+    const label = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('label');
     const repoOwner = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner;
     const repo = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo;
     const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit(token)
@@ -9869,7 +9870,15 @@ async function run() {
       state: 'open',
       sort: 'long-running',
     })
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('open-pr-list', pullRequest);
+    const promises = pullRequest.map(async (pr) => {
+      return octokit.rest.issues.addLabels({
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        issue_number: pr.number,
+        labels: [label]
+      });
+    })
+    await Promise.all(promises);
   } catch (error) {
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(error.message);
   }
