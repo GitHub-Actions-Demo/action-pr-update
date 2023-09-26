@@ -28,8 +28,8 @@ async function run() {
         workflow_id: workflow_id,
         ref: `main`,
         inputs: {
-          'pr-number': pr.number,
-          'pr-context': pr,
+          'pr-number': `${pr.number}`,
+          'pr-context': JSON.stringify(pr),
         }
       });
     })
