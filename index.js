@@ -26,7 +26,6 @@ async function run() {
         owner: repoOwner,
         repo: repo,
         workflow_id: workflow_id,
-        ref: `refs/remotes/pull/${pr.number}/merge`,
         inputs: {
           "pr-number": pr.number,
         }
