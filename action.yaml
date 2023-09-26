@@ -7,6 +7,9 @@ inputs:
   label:
     description: Label added to all PRs
     required: true
+  workflow_id:
+    description: Workflow to run on each PR
+    required: true
 outputs:
   open-pr-list: # id of output
     description: List of open PRs

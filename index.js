@@ -5,6 +5,7 @@ async function run() {
   try {
     const token = core.getInput('token');
     const label = core.getInput('label');
+    const workflow_id = core.getInput('workflow_id');
     const repoOwner = github.context.repo.owner;
     const repo = github.context.repo.repo;
     const octokit = github.getOctokit(token)
@@ -15,11 +16,20 @@ async function run() {
       sort: 'long-running',
     })
     const promises = pullRequest.map(async (pr) => {
-      return octokit.rest.issues.addLabels({
+      await octokit.rest.issues.addLabels({
         owner: repoOwner,
         repo: repo,
         issue_number: pr.number,
         labels: [label]
+      });
+      return octokit.rest.issues.createWorkflowDispatch({
+        owner: repoOwner,
+        repo: repo,
+        workflow_id: workflow_id,
+        ref: pr.merge_commit_sha,
+        inputs: {
+          "pr-number": pr.number,
+        }
       });
     })
     await Promise.all(promises);
