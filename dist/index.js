@@ -9860,7 +9860,8 @@ __nccwpck_require__.r(__webpack_exports__);
 async function run() {
   try {
     const token = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('token');
-    const label = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('label');
+    const labelAdd = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('label-add');
+    const labelRemove = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('label-remove');
     const repoOwner = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner;
     const repo = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo;
     const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit(token);
@@ -9872,15 +9873,23 @@ async function run() {
       sort: 'long-running',
     })
     // Add the `label` to each PR
-    const promises = pullRequest.map(async (pr) => {
+    const addPromises = pullRequest.map(async (pr) => {
       return octokit.rest.issues.addLabels({
         owner: repoOwner,
         repo: repo,
         issue_number: pr.number,
-        labels: [label]
+        labels: [labelAdd]
       });
     })
-    await Promise.all(promises);
+    const removePromises = pullRequest.map(async (pr) => {
+      return octokit.rest.issues.removeLabel({
+        owner: repoOwner,
+        repo: repo,
+        issue_number: pr.number,
+        labels: [labelRemove]
+      });
+    })
+    await Promise.all([...addPromises, ...removePromises]);
   } catch (error) {
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(error.message);
   }

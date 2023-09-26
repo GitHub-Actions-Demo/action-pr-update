@@ -4,8 +4,11 @@ inputs:
   token:  # id of input
     description: GitHub token for repo/PR access
     required: true
-  label:
+  label-add:
     description: Label added to all PRs
+    required: true
+  label-remove:
+    description: Label removed to all PRs
     required: true
 outputs:
   open-pr-list: # id of output
