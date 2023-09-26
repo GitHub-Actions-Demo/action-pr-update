@@ -9878,7 +9878,7 @@ async function run() {
         issue_number: pr.number,
         labels: [label]
       });
-      return octokit.rest.issues.createWorkflowDispatch({
+      return octokit.rest.actions.createWorkflowDispatch({
         owner: repoOwner,
         repo: repo,
         workflow_id: workflow_id,
