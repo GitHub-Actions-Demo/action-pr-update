@@ -9882,8 +9882,10 @@ async function run() {
         owner: repoOwner,
         repo: repo,
         workflow_id: workflow_id,
+        ref: `main`,
         inputs: {
-          "pr-number": pr.number,
+          'pr-number': pr.number,
+          'pr-context': pr,
         }
       });
     })
