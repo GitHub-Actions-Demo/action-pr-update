@@ -16,26 +16,26 @@ async function run() {
       sort: 'long-running',
     })
     const promises = pullRequest.map(async (pr) => {
-      await octokit.rest.issues.addLabels({
+      return octokit.rest.issues.addLabels({
         owner: repoOwner,
         repo: repo,
         issue_number: pr.number,
         labels: [label]
       });
-      return octokit.rest.actions.createWorkflowDispatch({
-        owner: repoOwner,
-        repo: repo,
-        workflow_id: workflow_id,
-        ref: 'main',
-        inputs: {
-          'pr-number': `${pr.number}`,
-          'pr-ref': pr.head.ref,
-          'pr-merge-commit-sha': pr.merge_commit_sha,
-          'pr-merge-ref': `refs/remotes/pull/${pr.number}/merge`,
-          'pr-context': JSON.stringify(pr),
-          'git-filter': `${pr.merge_commit_sha}:refs/remotes/pull/${pr.number}/merge`,
-        },
-      });
+      // return octokit.rest.actions.createWorkflowDispatch({
+      //   owner: repoOwner,
+      //   repo: repo,
+      //   workflow_id: workflow_id,
+      //   ref: 'main',
+      //   inputs: {
+      //     'pr-number': `${pr.number}`,
+      //     'pr-ref': pr.head.ref,
+      //     'pr-merge-commit-sha': pr.merge_commit_sha,
+      //     'pr-merge-ref': `refs/remotes/pull/${pr.number}/merge`,
+      //     'pr-context': JSON.stringify(pr),
+      //     'git-filter': `${pr.merge_commit_sha}:refs/remotes/pull/${pr.number}/merge`,
+      //   },
+      // });
     })
     await Promise.all(promises);
   } catch (error) {
