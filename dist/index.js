@@ -9882,12 +9882,15 @@ async function run() {
         owner: repoOwner,
         repo: repo,
         workflow_id: workflow_id,
-        ref: pr.head.ref,
+        ref: 'main',
         inputs: {
           'pr-number': `${pr.number}`,
+          'pr-ref': pr.head.ref,
+          'pr-merge-commit-sha': pr.merge_commit_sha,
+          'pr-merge-ref': `refs/remotes/pull/${pr.number}/merge`,
           'pr-context': JSON.stringify(pr),
           'git-filter': `${pr.merge_commit_sha}:refs/remotes/pull/${pr.number}/merge`,
-        }
+        },
       });
     })
     await Promise.all(promises);
