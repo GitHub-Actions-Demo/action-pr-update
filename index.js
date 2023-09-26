@@ -5,16 +5,17 @@ async function run() {
   try {
     const token = core.getInput('token');
     const label = core.getInput('label');
-    const workflow_id = core.getInput('workflow_id');
     const repoOwner = github.context.repo.owner;
     const repo = github.context.repo.repo;
-    const octokit = github.getOctokit(token)
+    const octokit = github.getOctokit(token);
+    // Get a list of all open PRs
     const { data: pullRequest } = await octokit.rest.pulls.list({
       owner: repoOwner,
       repo: repo,
       state: 'open',
       sort: 'long-running',
     })
+    // Add the `label` to each PR
     const promises = pullRequest.map(async (pr) => {
       return octokit.rest.issues.addLabels({
         owner: repoOwner,
@@ -22,20 +23,6 @@ async function run() {
         issue_number: pr.number,
         labels: [label]
       });
-      // return octokit.rest.actions.createWorkflowDispatch({
-      //   owner: repoOwner,
-      //   repo: repo,
-      //   workflow_id: workflow_id,
-      //   ref: 'main',
-      //   inputs: {
-      //     'pr-number': `${pr.number}`,
-      //     'pr-ref': pr.head.ref,
-      //     'pr-merge-commit-sha': pr.merge_commit_sha,
-      //     'pr-merge-ref': `refs/remotes/pull/${pr.number}/merge`,
-      //     'pr-context': JSON.stringify(pr),
-      //     'git-filter': `${pr.merge_commit_sha}:refs/remotes/pull/${pr.number}/merge`,
-      //   },
-      // });
     })
     await Promise.all(promises);
   } catch (error) {
