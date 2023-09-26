@@ -9865,6 +9865,7 @@ async function run() {
     const repoOwner = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner;
     const repo = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo;
     const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit(token);
+    let removePromises = [];
     // Get a list of all open PRs
     const { data: pullRequest } = await octokit.rest.pulls.list({
       owner: repoOwner,
@@ -9879,16 +9880,18 @@ async function run() {
         repo: repo,
         issue_number: pr.number,
         labels: [labelAdd]
-      }).catch(console.log);
-    })
-    const removePromises = pullRequest.map(async (pr) => {
-      return octokit.rest.issues.removeLabel({
-        owner: repoOwner,
-        repo: repo,
-        issue_number: pr.number,
-        labels: [labelRemove]
       });
-    })
+    });
+    if(labelRemove) {
+      removePromises = pullRequest.map(async (pr) => {
+        return octokit.rest.issues.removeLabel({
+          owner: repoOwner,
+          repo: repo,
+          issue_number: pr.number,
+          labels: [labelRemove]
+        }).catch(console.log);
+      });
+    }
     await Promise.all([...addPromises, ...removePromises]);
   } catch (error) {
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(error.message);

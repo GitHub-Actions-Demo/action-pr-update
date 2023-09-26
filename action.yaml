@@ -9,7 +9,7 @@ inputs:
     required: true
   label-remove:
     description: Label removed to all PRs
-    required: true
+    required: false
 outputs:
   open-pr-list: # id of output
     description: List of open PRs

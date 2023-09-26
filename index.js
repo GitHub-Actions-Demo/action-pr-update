@@ -9,6 +9,7 @@ async function run() {
     const repoOwner = github.context.repo.owner;
     const repo = github.context.repo.repo;
     const octokit = github.getOctokit(token);
+    let removePromises = [];
     // Get a list of all open PRs
     const { data: pullRequest } = await octokit.rest.pulls.list({
       owner: repoOwner,
@@ -23,16 +24,18 @@ async function run() {
         repo: repo,
         issue_number: pr.number,
         labels: [labelAdd]
-      }).catch(console.log);
-    })
-    const removePromises = pullRequest.map(async (pr) => {
-      return octokit.rest.issues.removeLabel({
-        owner: repoOwner,
-        repo: repo,
-        issue_number: pr.number,
-        labels: [labelRemove]
       });
-    })
+    });
+    if(labelRemove) {
+      removePromises = pullRequest.map(async (pr) => {
+        return octokit.rest.issues.removeLabel({
+          owner: repoOwner,
+          repo: repo,
+          issue_number: pr.number,
+          labels: [labelRemove]
+        }).catch(console.log);
+      });
+    }
     await Promise.all([...addPromises, ...removePromises]);
   } catch (error) {
     core.setFailed(error.message);
