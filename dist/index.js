@@ -9882,10 +9882,11 @@ async function run() {
         owner: repoOwner,
         repo: repo,
         workflow_id: workflow_id,
-        ref: `main`,
+        ref: pr.head.ref,
         inputs: {
           'pr-number': `${pr.number}`,
           'pr-context': JSON.stringify(pr),
+          'git-filter': `${pr.merge_commit_sha}:refs/remotes/pull/${pr.number}/merge`,
         }
       });
     })
