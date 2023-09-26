@@ -23,7 +23,7 @@ async function run() {
         repo: repo,
         issue_number: pr.number,
         labels: [labelAdd]
-      });
+      }).catch(console.log);
     })
     const removePromises = pullRequest.map(async (pr) => {
       return octokit.rest.issues.removeLabel({
