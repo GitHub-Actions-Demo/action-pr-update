@@ -26,7 +26,7 @@ async function run() {
         owner: repoOwner,
         repo: repo,
         workflow_id: workflow_id,
-        ref: pr.merge_commit_sha,
+        ref: `refs/remotes/pull/${pr.number}/merge`,
         inputs: {
           "pr-number": pr.number,
         }
